@@ -1,3 +1,5 @@
+package com.example.registroempleados.data.mapper
+
 import com.example.registroempleados.data.local.EmpleadoEntity
 import com.example.registroempleados.domain.model.Empleado
 

@@ -1,13 +1,13 @@
 package com.example.registroempleados.data.repository
 
-import com.example.registroempleados.data.dao.EmpleadoDao
+import com.example.registroempleados.data.local.EmpleadoDao
 import com.example.registroempleados.domain.model.Empleado
 import com.example.registroempleados.domain.repository.EmpleadoRepository
-import jakarta.inject.Inject
+import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import toDomain
-import toEntity
+import com.example.registroempleados.data.mapper.toDomain
+import com.example.registroempleados.data.mapper.toEntity
 
 class EmpleadoRepositoryImpl @Inject constructor(
     private val empleadoDao: EmpleadoDao
