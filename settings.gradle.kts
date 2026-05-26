@@ -24,4 +24,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "RegistroOcupaciones"
 include(":app")
- 
+include(":registroempleados")
