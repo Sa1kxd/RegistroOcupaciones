@@ -20,7 +20,8 @@ import com.example.registroempleados.domain.model.Empleado
 fun EmpleadoListScreen(
     viewModel: EmpleadoListViewModel = hiltViewModel(),
     onAddEmpleado: () -> Unit,
-    onNavigateToEdit: (Int) -> Unit
+    onNavigateToEdit: (Int) -> Unit,
+    onNavigateToHorasExtras: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -40,7 +41,8 @@ fun EmpleadoListScreen(
     EmpleadoListBody(
         state = state,
         onEvent = viewModel::onEvent,
-        onAddTask = { viewModel.onEvent(EmpleadoListUiEvent.CreateNew) }
+        onAddTask = { viewModel.onEvent(EmpleadoListUiEvent.CreateNew) },
+        onNavigateToHorasExtras = onNavigateToHorasExtras
     )
 }
 
@@ -49,7 +51,8 @@ fun EmpleadoListScreen(
 fun EmpleadoListBody(
     state: EmpleadoListUiState,
     onEvent: (EmpleadoListUiEvent) -> Unit,
-    onAddTask: () -> Unit
+    onAddTask: () -> Unit,
+    onNavigateToHorasExtras: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -63,7 +66,14 @@ fun EmpleadoListBody(
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
-            TopAppBar(title = { Text("Registro de Empleados") })
+            TopAppBar(
+                title = { Text("Registro de Empleados") },
+                actions = {
+                    TextButton(onClick = onNavigateToHorasExtras) {
+                        Text("Horas Extras")
+                    }
+                }
+            )
         },
         floatingActionButton = {
             FloatingActionButton(
@@ -83,7 +93,6 @@ fun EmpleadoListBody(
                 .fillMaxSize()
                 .padding(horizontal = 16.dp)
         ) {
-
             OutlinedTextField(
                 value = state.textoFiltro,
                 onValueChange = { onEvent(EmpleadoListUiEvent.OnTextoFiltroChanged(it)) },

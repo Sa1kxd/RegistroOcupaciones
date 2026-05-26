@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.registroempleados.presentation.empleado.form.EmpleadoFormScreen
+import com.example.registroempleados.presentation.empleado.horasextras.HorasExtrasScreen
 import com.example.registroempleados.presentation.empleado.list.EmpleadoListScreen
 
 @Composable
@@ -23,6 +24,9 @@ fun EmpleadoNavHost(
                 },
                 onNavigateToEdit = { id ->
                     navController.navigate(Screen.EmpleadoForm(id))
+                },
+                onNavigateToHorasExtras = {
+                    navController.navigate(Screen.HorasExtras)
                 }
             )
         }
@@ -35,6 +39,14 @@ fun EmpleadoNavHost(
                             inclusive = true
                         }
                     }
+                }
+            )
+        }
+
+        composable<Screen.HorasExtras> {
+            HorasExtrasScreen(
+                onBack = {
+                    navController.navigateUp()
                 }
             )
         }

@@ -8,4 +8,7 @@ sealed class Screen {
 
     @Serializable
     data class EmpleadoForm(val empleadoId: Int) : Screen()
+
+    @Serializable
+    data object HorasExtras : Screen()
 }
