@@ -5,8 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.registroocupaciones.presentation.ocupacion.edit.OcupacionFormScreen
-import com.example.registroocupaciones.presentation.ocupacion.list.OcupacionListScreen
+import com.example.registroocupaciones.presentation.ocupacion.adaptative.OcupacionAdaptiveScreen
 
 @Composable
 fun OcupacionNavHost(
@@ -17,26 +16,7 @@ fun OcupacionNavHost(
         startDestination = Screen.OcupacionList
     ) {
         composable<Screen.OcupacionList> {
-            OcupacionListScreen(
-                onCreateNew = {
-                    navController.navigate(Screen.OcupacionForm(0))
-                },
-                onNavigateToEdit = { id ->
-                    navController.navigate(Screen.OcupacionForm(id))
-                }
-            )
-        }
-
-        composable<Screen.OcupacionForm> {
-            OcupacionFormScreen(
-                onBack = {
-                    navController.navigate(Screen.OcupacionList) {
-                        popUpTo(Screen.OcupacionList) {
-                            inclusive = true
-                        }
-                    }
-                }
-            )
+            OcupacionAdaptiveScreen()
         }
     }
 }

@@ -1,16 +1,13 @@
 package com.example.registroocupaciones.presentation.ocupacion.edit
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.example.registroocupaciones.domain.model.Ocupacion
 import com.example.registroocupaciones.domain.usecase.DeleteOcupacionUseCase
 import com.example.registroocupaciones.domain.usecase.GetOcupacionUseCase
 import com.example.registroocupaciones.domain.usecase.UpsertOcupacionUseCase
 import com.example.registroocupaciones.domain.usecase.validateDescripcion
 import com.example.registroocupaciones.domain.usecase.validateSueldo
-import com.example.registroocupaciones.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -23,18 +20,11 @@ import javax.inject.Inject
 class OcupacionViewModel @Inject constructor(
     private val getOcupacionUseCase: GetOcupacionUseCase,
     private val upsertOcupacionUseCase: UpsertOcupacionUseCase,
-    private val deleteOcupacionUseCase: DeleteOcupacionUseCase,
-    savedStateHandle: SavedStateHandle
+    private val deleteOcupacionUseCase: DeleteOcupacionUseCase
 ) : ViewModel() {
-    private val routeArgs = savedStateHandle.toRoute<Screen.OcupacionForm>()
-    private val ocupacionId: Int = routeArgs.ocupacionId
 
     private val _state = MutableStateFlow(OcupacionUiState())
     val state: StateFlow<OcupacionUiState> = _state.asStateFlow()
-
-    init {
-        loadOcupacion(ocupacionId)
-    }
 
     fun onEvent(event: OcupacionUiEvent) {
         when (event) {
@@ -50,9 +40,19 @@ class OcupacionViewModel @Inject constructor(
         }
     }
 
-    private fun loadOcupacion(id: Int?) {
-        if (id == null || id == 0) {
-            _state.update { it.copy(isNew = true, ocupacionId = null) }
+    private fun loadOcupacion(id: Int) {
+        if (id == 0) {
+            _state.update {
+                it.copy(
+                    isNew = true,
+                    ocupacionId = null,
+                    descripcion = "",
+                    sueldo = "",
+                    descripcionError = null,
+                    sueldoError = null,
+                    errorMessage = null
+                )
+            }
             return
         }
 
@@ -64,11 +64,24 @@ class OcupacionViewModel @Inject constructor(
                         isNew = false,
                         ocupacionId = ocupacion.ocupacionId,
                         descripcion = ocupacion.descripcion,
-                        sueldo = ocupacion.sueldo.toString()
+                        sueldo = ocupacion.sueldo.toString(),
+                        descripcionError = null,
+                        sueldoError = null,
+                        errorMessage = null
                     )
                 }
             } else {
-                _state.update { it.copy(isNew = true, ocupacionId = null) }
+                _state.update {
+                    it.copy(
+                        isNew = true,
+                        ocupacionId = null,
+                        descripcion = "",
+                        sueldo = "",
+                        descripcionError = null,
+                        sueldoError = null,
+                        errorMessage = null
+                    )
+                }
             }
         }
     }
@@ -110,7 +123,6 @@ class OcupacionViewModel @Inject constructor(
                     )
                 }
             }.onFailure { exception ->
-                // Si la validación de duplicados falla en el UseCase, se atrapa aquí
                 _state.update {
                     it.copy(
                         isSaving = false,

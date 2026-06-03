@@ -1,9 +1,7 @@
 package com.example.registroempleados.presentation.empleado.form
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import com.example.registroempleados.domain.model.Empleado
 import com.example.registroempleados.domain.usecase.DeleteEmpleadoUseCase
@@ -13,7 +11,6 @@ import com.example.registroempleados.domain.usecase.validateFechaIngreso
 import com.example.registroempleados.domain.usecase.validateNombres
 import com.example.registroempleados.domain.usecase.validateSexo
 import com.example.registroempleados.domain.usecase.validateSueldo
-import com.example.registroempleados.presentation.navigation.Screen
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -25,19 +22,11 @@ import javax.inject.Inject
 class EmpleadoFormViewModel @Inject constructor(
     private val getEmpleadoUseCase: GetEmpleadoUseCase,
     private val upsertEmpleadoUseCase: UpsertEmpleadoUseCase,
-    private val deleteEmpleadoUseCase: DeleteEmpleadoUseCase,
-    savedStateHandle: SavedStateHandle
+    private val deleteEmpleadoUseCase: DeleteEmpleadoUseCase
 ) : ViewModel() {
-
-    private val routeArgs = savedStateHandle.toRoute<Screen.EmpleadoForm>()
-    private val empleadoId: Int = routeArgs.empleadoId
 
     private val _state = MutableStateFlow(EmpleadoFormUiState())
     val state: StateFlow<EmpleadoFormUiState> = _state.asStateFlow()
-
-    init {
-        loadEmpleado(empleadoId)
-    }
 
     fun onEvent(event: EmpleadoFormUiEvent) {
         when (event) {
@@ -59,9 +48,22 @@ class EmpleadoFormViewModel @Inject constructor(
         }
     }
 
-    private fun loadEmpleado(id: Int?) {
-        if (id == null || id == 0) {
-            _state.update { it.copy(isNew = true, empleadoId = null) }
+    private fun loadEmpleado(id: Int) {
+        if (id == 0) {
+            _state.update {
+                it.copy(
+                    isNew = true,
+                    empleadoId = null,
+                    nombres = "",
+                    fechaIngreso = "",
+                    sexo = "",
+                    sueldo = "",
+                    nombresError = null,
+                    fechaIngresoError = null,
+                    sexoError = null,
+                    sueldoError = null
+                )
+            }
             return
         }
 
@@ -75,11 +77,28 @@ class EmpleadoFormViewModel @Inject constructor(
                         nombres = empleado.nombres,
                         fechaIngreso = empleado.fechaIngreso,
                         sexo = empleado.sexo,
-                        sueldo = empleado.sueldo.toString()
+                        sueldo = empleado.sueldo.toString(),
+                        nombresError = null,
+                        fechaIngresoError = null,
+                        sexoError = null,
+                        sueldoError = null
                     )
                 }
             } else {
-                _state.update { it.copy(isNew = true, empleadoId = null) }
+                _state.update {
+                    it.copy(
+                        isNew = true,
+                        empleadoId = null,
+                        nombres = "",
+                        fechaIngreso = "",
+                        sexo = "",
+                        sueldo = "",
+                        nombresError = null,
+                        fechaIngresoError = null,
+                        sexoError = null,
+                        sueldoError = null
+                    )
+                }
             }
         }
     }
