@@ -105,4 +105,8 @@ dependencies {
 
     // Room Testing
     testImplementation("androidx.room:room-testing:2.8.4")
+    implementation(libs.compose.adaptive)
+    implementation(libs.compose.adaptive.layout)
+    implementation(libs.compose.adaptive.nav)
+    implementation("androidx.compose.material3:material3-window-size-class:1.3.0")
 }
