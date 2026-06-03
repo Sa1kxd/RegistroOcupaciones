@@ -16,10 +16,15 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OcupacionFormScreen(
+    ocupacionId: Int,
     viewModel: OcupacionViewModel = hiltViewModel(),
     onBack: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    LaunchedEffect(ocupacionId) {
+        viewModel.onEvent(OcupacionUiEvent.Load(ocupacionId))
+    }
 
     LaunchedEffect(state.saved, state.deleted) {
         if (state.saved || state.deleted) {
